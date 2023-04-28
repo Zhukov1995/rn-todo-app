@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Feather } from '@expo/vector-icons';
+import { useDispatch } from "react-redux";
 
 import { THEME } from "../theme";
 import MyModal from "../components/MyModal";
 import AppButton from "../components/ui/AppButton";
+import { setTodoId } from "../store/todoReducer";
 
-
-const ItemScreen = ({ targetTodo, closeTodo, deleteTodo, saveChange }) => {
+const ItemScreen = ({ alert, targetTodo }) => {
     const [visibleModal, setVisibleModal] = useState(false);
+    const dispatch = useDispatch();
 
     return (
         <View style={styles.wrapper}>
@@ -19,10 +21,10 @@ const ItemScreen = ({ targetTodo, closeTodo, deleteTodo, saveChange }) => {
                 </AppButton>
             </View>
             <View style={styles.buttonGroup}>
-                <AppButton onPress={() => closeTodo(null)} color={THEME.GREY_COLOR} width={150}>Назад</AppButton>
-                <AppButton onPress={() => deleteTodo(targetTodo.id)} color={THEME.DANGER_COLOR} width={150}>Удалить</AppButton>
+                <AppButton onPress={() => dispatch(setTodoId(null))} color={THEME.GREY_COLOR} width={150}>Назад</AppButton>
+                <AppButton onPress={() => alert(targetTodo.id)} color={THEME.DANGER_COLOR} width={150}>Удалить</AppButton>
             </View>
-            <MyModal visibleModal={visibleModal} setVisibleModal={setVisibleModal} saveChange={saveChange} targetTodo={targetTodo} />
+            <MyModal visibleModal={visibleModal} setVisibleModal={setVisibleModal} targetTodo={targetTodo} />
         </View>
     )
 }

@@ -1,15 +1,26 @@
 import React, { useState } from "react";
 import { View, StyleSheet, TextInput, Alert, Keyboard } from 'react-native';
+import { useDispatch } from "react-redux";
 
 import { THEME } from "../theme";
 import AppButton from "./ui/AppButton";
+import { addTodo } from "../store/todoReducer";
+import { Fetch } from "../service/fetch";
 
-const AddTodo = ({ onSubmit }) => {
+const AddTodo = () => {
     const [value, setValue] = useState('');
+    const dispatch = useDispatch();
 
+    // добавляем в базу данных и в state
+    const addTodoFetch = async () => {
+        const data = await Fetch.post(value);
+        dispatch(addTodo(data.id, value));
+    }
+
+    // если значение пусто выводим Alert, и ничего не добавляем 
     const onValidate = () => {
         if (value !== '') {
-            onSubmit(value);
+            addTodoFetch()
             setValue('');
             Keyboard.dismiss();
         } else {

@@ -1,14 +1,20 @@
 import React from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useDispatch } from "react-redux";
 
-const Todo = ({ todo, deleteTodo, onOpen }) => {
+import { setTodoId } from "../store/todoReducer";
+
+
+const Todo = ({ alert, todo }) => {
+    const dispatch = useDispatch();
+
     return (
         <TouchableOpacity
             activeOpacity={0.5}
             style={styles.todo}
-            onLongPress={() => deleteTodo(todo.id)}
+            onLongPress={() => alert(todo.id)}
             delayLongPress={1000}
-            onPress={() => onOpen(todo.id)}        >
+            onPress={() => dispatch(setTodoId(todo.id))} >
             <Text style={styles.text}>{todo.title}</Text>
         </TouchableOpacity>
     )

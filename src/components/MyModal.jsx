@@ -1,21 +1,28 @@
 import { useState } from "react";
 import { Modal, View, StyleSheet, TextInput, Alert } from "react-native";
+import { useDispatch } from "react-redux";
 
 import { THEME } from "../theme";
 import AppButton from "./ui/AppButton";
+import { updateTodo } from "../store/todoReducer";
+import { Fetch } from "../service/fetch";
 
-const MyModal = ({ visibleModal, setVisibleModal, saveChange, targetTodo }) => {
+const MyModal = ({ visibleModal, setVisibleModal, targetTodo }) => {
     const [value, setValue] = useState(targetTodo.title);
+    const dispatch = useDispatch();
 
-    const onSave = () => {
+    // если значение не пусто, вносим изменения в базе данных и в state
+    const onSave = async () => {
         if (value !== '') {
-            saveChange(targetTodo.id, value);
+            dispatch(updateTodo(targetTodo.id, value))
+            await Fetch.put(targetTodo.id, value)
             setVisibleModal(!visibleModal);
         } else {
-            Alert.alert('Значение не может быть менее 3 символов!');
+            Alert.alert('Значение не может быть пустым');
         }
     }
 
+    // закрываем модалку
     const onCancel = () => {
         setVisibleModal(!visibleModal);
         setValue(targetTodo.title);
